@@ -1,186 +1,179 @@
-RxPulse – Amazon Pharmacy Voice of Customer Intelligence Platform
+# RxPulse – Amazon Pharmacy Voice of Customer Intelligence Platform
 
-Author: Ashish Kesari
+**Author:** Ashish Kesari
 
-RxPulse is an end-to-end data engineering and AI-driven analytics platform designed to capture, process, and surface customer voice signals for Amazon Pharmacy. The platform ingests Reddit discussions, structures unstructured feedback using Spark, enriches it with AI insights using Gemini, and presents executive-ready intelligence through an interactive Streamlit dashboard.
+RxPulse is an end-to-end data engineering and AI-driven analytics platform designed to capture, process, and surface customer voice signals for Amazon Pharmacy. The platform ingests Reddit discussions, structures unstructured feedback using Apache Spark, enriches it with AI insights using Gemini, and presents executive-ready intelligence through an interactive Streamlit dashboard.
 
-This project demonstrates real-world data engineering practices, lakehouse architecture design, and practical AI integration for business decision support.
+This project demonstrates real-world data engineering practices, modern lakehouse architecture design, and practical AI integration for business decision support at Amazon scale.
 
-Business Problem
+---
 
-Customer feedback related to Amazon Pharmacy is largely unstructured and spread across public forums such as Reddit. Manually tracking this feedback does not scale and often fails to detect early warning signals such as trust erosion, operational issues, or rising negative sentiment.
+## Business Problem
 
-RxPulse solves this by:
+Customer feedback related to Amazon Pharmacy is largely unstructured and spread across public forums such as Reddit. Manually tracking this feedback does not scale and often fails to detect early warning signals such as trust erosion, operational issues, fulfillment problems, or rising negative sentiment.
 
-Continuously ingesting customer conversations
+RxPulse solves this problem by building an automated intelligence pipeline that continuously listens to customer conversations and converts raw text into structured, decision-ready insights.
 
-Structuring raw text into analytics-ready datasets
+---
 
-Enriching feedback with AI-generated insights
+## What RxPulse Does
 
-Surfacing actionable intelligence for leadership
+RxPulse enables Amazon Pharmacy teams to:
 
-Architecture Overview
+- Continuously ingest customer conversations from public forums  
+- Structure raw text into analytics-ready datasets  
+- Enrich feedback with AI-generated sentiment, risk, and themes  
+- Surface actionable intelligence for leadership and operations teams  
 
-RxPulse follows a modern Bronze → Silver → Gold lakehouse architecture on Amazon S3.
+---
 
-Ingestion Layer
+## Architecture Overview
 
-Reddit API ingestion using Python
+RxPulse follows a modern **Bronze → Silver → Gold lakehouse architecture** built on Amazon S3.
 
-Optional web crawling ingestion as a fallback or parallel source
+![Architecture Diagram](rxpulse/images/architecturediagram.png)
 
-Raw JSON data stored in the Bronze layer on S3
+---
 
-Processing Layer
+## Ingestion Layer
 
-Apache Spark processes raw data into structured formats
+- Reddit API ingestion using Python  
+- Optional web crawling ingestion as a fallback or parallel source  
+- Raw JSON data stored in the Bronze layer on Amazon S3  
 
-Bronze to Silver transformations clean and normalize the data
+---
 
-Silver to Gold transformations aggregate metrics and prepare AI-ready datasets
+## Processing Layer
 
-Spark can run locally or on EMR without architectural changes
+- Apache Spark processes raw data into structured formats  
+- Bronze to Silver transformations clean, normalize, and standardize data  
+- Silver to Gold transformations aggregate metrics and prepare AI-ready datasets  
+- Spark can run locally or on Amazon EMR without architectural changes  
 
-AI Enrichment Layer
+---
 
-Gemini AI analyzes GENERAL_FEEDBACK posts only
+## AI Enrichment Layer
 
-Generates sentiment, risk level, hidden theme, and recommended action
+- Gemini AI analyzes **GENERAL_FEEDBACK** posts only  
+- For each feedback record, the model generates:
+  - Sentiment (Positive, Neutral, Negative)  
+  - Risk level (Low, Medium, High)  
+  - Hidden customer theme  
+  - Recommended business action  
+- AI outputs are written back to the Gold layer in Amazon S3  
 
-AI outputs are written back to the Gold layer in S3
+This selective AI strategy ensures high business value while controlling cost.
 
-Analytics Layer
+---
 
-AWS Glue Data Catalog manages metadata
+## Analytics Layer
 
-Amazon Athena queries Silver and Gold datasets directly from S3
+- AWS Glue Data Catalog manages metadata  
+- Amazon Athena queries Silver and Gold datasets directly from S3  
+- Streamlit dashboard presents executive-ready intelligence  
 
-Streamlit dashboard visualizes insights for executives and analysts
+---
 
-Data Layers
-Bronze Layer
+## Data Layers
 
-Raw Reddit and web-scraped JSON
+### Bronze Layer
+- Raw Reddit and web-scraped JSON  
+- Stored as-is for traceability and reprocessing  
 
-Stored as-is for traceability and reprocessing
+### Silver Layer
+- Cleaned and normalized Parquet datasets  
+- Structured schema suitable for analytics and AI processing  
 
-Silver Layer
+### Gold Layer
+- Aggregated issue metrics  
+- AI-enriched general feedback insights  
+- Executive-ready datasets queried by Athena  
 
-Cleaned and normalized Parquet files
+---
 
-Structured schema suitable for analytics and AI processing
+## Streamlit Dashboard
 
-Gold Layer
+The Streamlit dashboard provides an executive-friendly view of customer sentiment, operational risks, and emerging issues.
 
-Aggregated issue metrics
+![Dashboard Overview](rxpulse/images/1.png)
 
-AI-enriched general feedback insights
+### Key Dashboard Features
 
-Executive-ready datasets queried by Athena
+- High-level KPIs such as total mentions and issue categories  
+- Issue volume distribution and issue share visualizations  
+- Executive AI summary highlighting dominant themes and risks  
+- High-risk feedback cards with customer evidence  
 
-AI Enrichment Strategy
+![Sentiment Analysis](rxpulse/images/2.png)
 
-AI is applied selectively to maximize value and control cost.
+- Sentiment distribution for general feedback  
+- Neutral vs negative feedback comparison  
+- Detection of top neutral and top negative feedback  
 
-Only general customer feedback is enriched with Gemini AI. For each feedback record, the model produces:
+![High Risk Feedback](rxpulse/images/3.png)
 
-Sentiment (Positive, Neutral, Negative)
+- Identification of high-impact Reddit posts  
+- Customer evidence supporting observed trends  
 
-Risk level (Low, Medium, High)
+![Export and Insights](rxpulse/images/4.png)
 
-Hidden theme
+- CSV export for AI-enriched insights  
+- All queries executed via Amazon Athena on S3 data  
 
-Recommended business action
+---
 
-This ensures AI is used where it provides the highest strategic value rather than blindly across all data.
+## Key Tables
 
-Streamlit Dashboard Features
+- **fact_issue_daily**  
+  Daily aggregated issue metrics  
 
-The Streamlit dashboard provides an executive-friendly view of customer sentiment and risk.
+- **top_issue_posts**  
+  High-impact Reddit posts by issue and date  
 
-Key features include:
+- **general_feedback_ai**  
+  Gemini-enriched customer feedback with sentiment, risk, and recommended actions  
 
-High-level KPIs such as total mentions and issue categories
+---
 
-Issue volume distribution and issue share visualizations
+## Tech Stack
 
-Executive AI summary highlighting dominant themes and risk levels
+- Python  
+- Apache Spark  
+- Amazon S3  
+- AWS Glue Data Catalog  
+- Amazon Athena  
+- Google Gemini AI  
+- Streamlit  
+- Plotly  
+- Reddit API  
 
-High-risk feedback cards with customer evidence
+---
 
-Sentiment distribution for general feedback
-
-Neutral vs negative feedback comparison
-
-Top neutral and top negative feedback detection
-
-High-impact Reddit posts supporting observed trends
-
-CSV export for AI-enriched insights
-
-All dashboard queries run through Amazon Athena on S3 data.
-
-Key Tables
-
-fact_issue_daily
-Daily aggregated issue metrics
-
-top_issue_posts
-High-impact Reddit posts by issue and date
-
-general_feedback_ai
-Gemini-enriched customer feedback with sentiment, risk, and actions
-
-Tech Stack
-
-Python
-
-Apache Spark
-
-Amazon S3
-
-AWS Glue Data Catalog
-
-Amazon Athena
-
-Google Gemini AI
-
-Streamlit
-
-Plotly
-
-Reddit API
-
-Why This Project Matters
+## Why This Project Matters
 
 RxPulse demonstrates:
 
-Scalable lakehouse design
+- Scalable lakehouse architecture design  
+- Real-world ingestion pipelines  
+- Spark-based batch processing  
+- Cost-aware AI integration  
+- Executive-ready analytics delivery  
 
-Real-world ingestion pipelines
+This project reflects the type of systems built by data engineers working on large-scale platforms such as Amazon Pharmacy, Amazon Health, and Amazon Retail Analytics.
 
-Spark-based batch processing
+---
 
-Cost-aware AI integration
+## Future Enhancements
 
-Executive-ready analytics delivery
+- Near real-time ingestion using streaming services  
+- Automated alerting for high-risk signal spikes  
+- Time-series trend analysis  
+- Additional data sources beyond Reddit  
+- Role-based access control for dashboards  
 
-This project reflects the type of systems built by data engineers working on large-scale platforms such as Amazon Pharmacy, Amazon Health, or Amazon Retail Analytics.
+---
 
-Future Enhancements
+## Author
 
-Near real-time ingestion using streaming services
-
-Automated alerting for high-risk signal spikes
-
-Time-series trend analysis
-
-Additional data sources beyond Reddit
-
-Role-based access control for dashboards
-
-Author
-
-Ashish Kesari
+**Ashish Kesari**  
 Amazon-Style Data Engineering and AI Analytics
