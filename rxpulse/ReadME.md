@@ -31,7 +31,7 @@ RxPulse enables Amazon Pharmacy teams to:
 
 RxPulse follows a modern **Bronze → Silver → Gold lakehouse architecture** built on Amazon S3.
 
-![Architecture Diagram](rxpulse/images/architecture diagram.png)
+![Architecture Diagram](images/architecture diagram.png)
 
 ---
 
@@ -95,7 +95,7 @@ This selective AI strategy ensures high business value while controlling cost.
 
 The Streamlit dashboard provides an executive-friendly view of customer sentiment, operational risks, and emerging issues.
 
-![Dashboard Overview](rxpulse/images/1.png)
+![Dashboard Overview](images/1.png)
 
 ### Key Dashboard Features
 
@@ -104,18 +104,18 @@ The Streamlit dashboard provides an executive-friendly view of customer sentimen
 - Executive AI summary highlighting dominant themes and risks  
 - High-risk feedback cards with customer evidence  
 
-![Sentiment Analysis](rxpulse/images/2.png)
+![Sentiment Analysis](images/2.png)
 
 - Sentiment distribution for general feedback  
 - Neutral vs negative feedback comparison  
 - Detection of top neutral and top negative feedback  
 
-![High Risk Feedback](rxpulse/images/3.png)
+![High Risk Feedback](images/3.png)
 
 - Identification of high-impact Reddit posts  
 - Customer evidence supporting observed trends  
 
-![Export and Insights](rxpulse/images/4.png)
+![Export and Insights](images/4.png)
 
 - CSV export for AI-enriched insights  
 - All queries executed via Amazon Athena on S3 data  
