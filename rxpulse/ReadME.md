@@ -31,7 +31,7 @@ RxPulse enables Amazon Pharmacy teams to:
 
 RxPulse follows a modern **Bronze → Silver → Gold lakehouse architecture** built on Amazon S3.
 
-![Architecture Diagram](images/architecture diagram.png)
+![Architecture Diagram](images/architecturediagram.png)
 
 ---
 
