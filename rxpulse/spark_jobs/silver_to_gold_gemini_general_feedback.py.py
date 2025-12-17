@@ -11,22 +11,18 @@ from tenacity import retry, wait_fixed, stop_after_attempt
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 
-
-# ---------------- CONFIG ----------------
 MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_ROWS = int(os.getenv("GEMINI_MAX_ROWS", "10"))  # keep small for free-tier
 S3_BUCKET = os.getenv("S3_BUCKET", "amzn-rx")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 
 SILVER_PATH = f"s3a://{S3_BUCKET}/silver/reddit_posts_clean/"
-# ----------------------------------------
 
 
 def build_spark() -> SparkSession:
     return (
         SparkSession.builder
         .appName("RxPulse_Gemini_General_Feedback")
-        # ---- S3A SUPPORT (fixes S3AFileSystem not found) ----
         .config(
             "spark.jars.packages",
             "org.apache.hadoop:hadoop-aws:3.3.4,"
@@ -45,10 +41,6 @@ def build_spark() -> SparkSession:
 
 
 def extract_json(text: str) -> Dict[str, Any]:
-    """
-    Gemini sometimes returns extra words or ```json blocks.
-    This extracts the first JSON object from the response safely.
-    """
     if not text or not isinstance(text, str):
         raise ValueError("Empty Gemini response")
 
@@ -96,7 +88,6 @@ Post:
 def main():
     load_dotenv()
 
-    # --- Validate env ---
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise RuntimeError(
@@ -112,7 +103,7 @@ def main():
     TODAY = date.today().isoformat()
     GOLD_AI_PATH = f"s3a://{S3_BUCKET}/gold/general_feedback_ai/dt={TODAY}/"
 
-    print("🧠 Starting Gemini enrichment (GENERAL_FEEDBACK only)")
+    print("Starting Gemini enrichment (GENERAL_FEEDBACK only)")
     print("Model:", MODEL_NAME)
     print("Max rows:", MAX_ROWS)
     print("Silver path:", SILVER_PATH)
@@ -134,10 +125,10 @@ def main():
     for i, r in enumerate(rows, start=1):
         title = r["title"] or ""
         if not title.strip():
-            print(f"⚠️ Skipping empty title at row {i}")
+            print(f"Skipping empty title at row {i}")
             continue
 
-        print(f"🔎 Enriching {i}/{len(rows)}")
+        print(f"Enriching {i}/{len(rows)}")
         try:
             ai = gemini_enrich(title)
 
@@ -160,10 +151,10 @@ def main():
             })
 
         except Exception as e:
-            print(f"⚠️ Skipped row {i} due to Gemini/parsing error: {str(e)[:180]}")
+            print(f"Skipped row {i} due to Gemini/parsing error: {str(e)[:180]}")
 
     if not enriched:
-        print("⚠️ No AI insights produced. Nothing to write.")
+        print("No AI insights produced. Nothing to write.")
         spark.stop()
         return
 
@@ -178,9 +169,9 @@ def main():
         .parquet(GOLD_AI_PATH)
     )
 
-    print("✅ Gemini AI insights written to:", GOLD_AI_PATH)
+    print("Gemini AI insights written to:", GOLD_AI_PATH)
     spark.stop()
-    print("🛑 Job complete")
+    print("Job complete")
 
 
 if __name__ == "__main__":

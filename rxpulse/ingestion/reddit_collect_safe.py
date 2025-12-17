@@ -5,11 +5,9 @@ import json
 from pathlib import Path
 from datetime import datetime, timezone
 
-# -----------------------------
-# CONFIG (ETHICAL GUARDRAILS)
-# -----------------------------
-MAX_POSTS = 100          # hard cap
-SLEEP_SECONDS = 8        # slow, human-like pace
+
+MAX_POSTS = 100          
+SLEEP_SECONDS = 8        
 
 SEARCH_URLS = [
     "https://old.reddit.com/search?q=Amazon+Pharmacy+delay",
@@ -34,9 +32,9 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 OUTPUT_FILE = OUT_DIR / "reddit_posts.json"
 
-# -----------------------------
+
 # INGESTION
-# -----------------------------
+
 collected = []
 
 for search_url in SEARCH_URLS:
@@ -63,14 +61,12 @@ for search_url in SEARCH_URLS:
             "source": "reddit",
             "created_date": datetime.now(timezone.utc).date().isoformat(),
             "title": title,
-            "body_text": ""  # intentionally empty (by design)
+            "body_text": ""  
         })
 
         time.sleep(SLEEP_SECONDS)
 
-# -----------------------------
 # SAVE TO BRONZE
-# -----------------------------
 with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
     json.dump(collected, f, indent=2, ensure_ascii=False)
 

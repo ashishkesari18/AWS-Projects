@@ -9,7 +9,7 @@ from datetime import date
 
 
 def main():
-    print("🟡 Starting Gold Layer Job")
+    print("Starting Gold Layer Job")
 
     spark = (
         SparkSession.builder
@@ -88,12 +88,12 @@ def main():
         .parquet(GOLD_TOP_POSTS)
     )
 
-    print("✅ Gold layer written successfully")
-    print("📍 fact_issue_daily:", GOLD_FACT_DAILY)
-    print("📍 top_issue_posts:", GOLD_TOP_POSTS)
+    print("Gold layer written successfully")
+    print("fact_issue_daily:", GOLD_FACT_DAILY)
+    print("top_issue_posts:", GOLD_TOP_POSTS)
 
     spark.stop()
-    print("🛑 Gold job completed")
+    print("Gold job completed")
 
 
 if __name__ == "__main__":

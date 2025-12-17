@@ -6,18 +6,17 @@ import boto3
 import plotly.express as px
 from dotenv import load_dotenv
 
-# =================================================
-# CONFIG
-# =================================================
+
+# 1. CONFIG
+
 load_dotenv()
 
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 ATHENA_DB = os.getenv("ATHENA_DB", "rxpulse")
 ATHENA_OUTPUT = os.getenv("ATHENA_OUTPUT", "s3://amzn-rx/athena-results/")
 
-# =================================================
-# ATHENA HELPER
-# =================================================
+# 2.ATHENA HELPER
+
 def query_athena(sql: str) -> pd.DataFrame:
     athena = boto3.client("athena", region_name=AWS_REGION)
 
@@ -44,18 +43,18 @@ def query_athena(sql: str) -> pd.DataFrame:
 
     return pd.DataFrame(rows, columns=cols)
 
-# =================================================
-# PAGE SETUP (MUST BE FIRST STREAMLIT CALL)
-# =================================================
+
+# 3.PAGE SETUP 
+
 st.set_page_config(
     page_title="RxPulse – Amazon Pharmacy VoC",
     page_icon="💊",
     layout="wide"
 )
 
-# =================================================
-# STYLES
-# =================================================
+
+# 4. STYLES
+
 st.markdown("""
 <style>
 .big-title { font-size:44px; font-weight:900; }
@@ -74,9 +73,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# =================================================
-# HEADER
-# =================================================
+
+# 5. HEADER
+
 st.markdown('<div class="big-title">💊 RxPulse</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="subtitle">Amazon Pharmacy – Voice of Customer Intelligence Platform (Spark + S3 + Athena + Gemini)</div>',
@@ -84,9 +83,8 @@ st.markdown(
 )
 st.markdown("---")
 
-# =================================================
-# DATE SELECTOR
-# =================================================
+# 6.DATE SELECTOR
+
 dates = query_athena("""
 SELECT DISTINCT dt
 FROM rxpulse.fact_issue_daily
@@ -99,9 +97,8 @@ if dates.empty:
 
 selected_dt = st.selectbox("📅 Select Snapshot Date", dates["dt"])
 
-# =================================================
-# KPI SECTION
-# =================================================
+# 7. KPI SECTION
+
 kpis = query_athena(f"""
 SELECT
   SUM(mentions) AS total_mentions,
@@ -141,9 +138,8 @@ with c3:
 
 st.markdown("---")
 
-# =================================================
-# ISSUE DISTRIBUTION
-# =================================================
+# 8. ISSUE DISTRIBUTION
+
 issue_df = query_athena(f"""
 SELECT issue_type, mentions
 FROM rxpulse.fact_issue_daily
@@ -167,9 +163,9 @@ with r:
 
 st.markdown("---")
 
-# =================================================
-# EXECUTIVE AI INSIGHTS
-# =================================================
+
+# 9. EXECUTIVE AI INSIGHTS
+
 st.subheader("🧠 Executive AI Insights (General Feedback)")
 
 ai_df = query_athena(f"""
@@ -201,9 +197,9 @@ for _, r in high_risk.iterrows():
 
 st.markdown("---")
 
-# =================================================
-# NEUTRAL vs NEGATIVE COMPARISON
-# =================================================
+
+# 10. NEUTRAL vs NEGATIVE COMPARISON
+
 st.subheader("⚖️ Neutral vs Negative Feedback")
 
 sent_df = query_athena(f"""
@@ -224,9 +220,9 @@ sent_bar = px.bar(
 )
 st.plotly_chart(sent_bar, use_container_width=True)
 
-# =================================================
-# TOP NEUTRAL & NEGATIVE POSTS
-# =================================================
+
+# 11. TOP NEUTRAL & NEGATIVE POSTS
+
 c1, c2 = st.columns(2)
 
 with c1:
@@ -251,9 +247,9 @@ with c2:
 
 st.markdown("---")
 
-# =================================================
-# TOP POSTS
-# =================================================
+
+# 12. TOP POSTS
+
 st.subheader("🧵 High-Impact Customer Posts")
 
 posts = query_athena(f"""
@@ -266,8 +262,5 @@ LIMIT 25
 
 st.dataframe(posts, use_container_width=True, hide_index=True)
 
-# =================================================
-# FOOTER
-# =================================================
 st.markdown("---")
 st.caption("Built by Ashish Kesari | Amazon-Style Data Engineering & AI Platform")

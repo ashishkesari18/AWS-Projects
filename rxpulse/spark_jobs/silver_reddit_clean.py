@@ -14,7 +14,7 @@ spark = (
     .getOrCreate()
 )
 
-print("🟢 Starting Silver Layer Job")
+print("Starting Silver Layer Job")
 
 BRONZE_PATH = "s3a://amzn-rx/bronze/reddit_posts/reddit_posts.json"
 SILVER_PATH = "s3a://amzn-rx/silver/reddit_posts_clean/"
@@ -64,7 +64,7 @@ df_silver.show(10, truncate=False)
     .parquet(SILVER_PATH)
 )
 
-print("💾 Silver layer written to:", SILVER_PATH)
+print("Silver layer written to:", SILVER_PATH)
 
 spark.stop()
-print("🛑 Silver job completed successfully")
+print("Silver job completed successfully")
