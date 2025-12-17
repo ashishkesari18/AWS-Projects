@@ -1,6 +1,6 @@
 # RxPulse – Amazon Pharmacy Voice of Customer Intelligence Platform
 
-**Author:** Ashish Kesari
+
 
 RxPulse is an end-to-end data engineering and AI-driven analytics platform designed to capture, process, and surface customer voice signals for Amazon Pharmacy. The platform ingests Reddit discussions, structures unstructured feedback using Apache Spark, enriches it with AI insights using Gemini, and presents executive-ready intelligence through an interactive Streamlit dashboard.
 
@@ -31,7 +31,7 @@ RxPulse enables Amazon Pharmacy teams to:
 
 RxPulse follows a modern **Bronze → Silver → Gold lakehouse architecture** built on Amazon S3.
 
-![Architecture Diagram](rxpulse/images/architecturediagram.png)
+![Architecture Diagram](rxpulse/images/architecture diagram.png)
 
 ---
 
